@@ -20,11 +20,13 @@ jobs:
       - name: Install Anchor
         run: npm install -g @coral-xyz/anchor-cli
 
-      - name: Setup Solana CLI (v1.18.12)
+      - name: Install Solana CLI (from GitHub release)
         run: |
-          curl -sSfL https://release.solana.com/v1.18.12/install | sh -s
-          echo "$HOME/.local/share/solana/install/active_release/bin" >> $GITHUB_PATH
-          echo "$HOME/.local/share/solana/install/active_release/bin" >> $GITHUB_ENV
+          mkdir -p /tmp/solana
+          curl -L https://github.com/solana-labs/solana/releases/download/v1.18.12/solana-release-x86_64-unknown-linux-gnu.tar.bz2 -o /tmp/solana/solana.tar.bz2
+          tar -xjf /tmp/solana/solana.tar.bz2 -C /tmp/solana
+          echo "/tmp/solana/solana-release/bin" >> $GITHUB_PATH
+          echo "/tmp/solana/solana-release/bin" >> $GITHUB_ENV
           solana --version
 
       - name: Decode wallet keypair from secret
