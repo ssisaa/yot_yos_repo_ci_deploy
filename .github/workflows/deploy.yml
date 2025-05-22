@@ -1,0 +1,38 @@
+name: Anchor Build & Deploy
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+
+      - name: Install Anchor
+        run: |
+          npm install -g @coral-xyz/anchor-cli
+
+      - name: Setup Solana CLI
+        run: |
+          sh -c "$(curl -sSfL https://release.solana.com/stable/install)"
+          export PATH="/home/runner/.local/share/solana/install/active_release/bin:$PATH"
+          solana --version
+
+      - name: Anchor Build
+        run: anchor build
+
+      # Optional: Deploy only if key is provided
+      - name: Deploy (Optional - Requires id.json)
+        if: ${{ secrets.SOLANA_WALLET }}
+        run: |
+          echo "${{ secrets.SOLANA_WALLET }}" > ~/.config/solana/id.json
+          anchor deploy
