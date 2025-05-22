@@ -18,21 +18,21 @@ jobs:
           override: true
 
       - name: Install Anchor
-        run: |
-          npm install -g @coral-xyz/anchor-cli
+        run: npm install -g @coral-xyz/anchor-cli
 
       - name: Setup Solana CLI
         run: |
           sh -c "$(curl -sSfL https://release.solana.com/stable/install)"
-          export PATH="/home/runner/.local/share/solana/install/active_release/bin:$PATH"
+          echo "$HOME/.local/share/solana/install/active_release/bin" >> $GITHUB_PATH
           solana --version
+
+      - name: Decode wallet keypair
+        run: |
+          mkdir -p ~/.config/solana
+          echo "${{ secrets.SOLANA_WALLET }}" | base64 -d > ~/.config/solana/id.json
 
       - name: Anchor Build
         run: anchor build
 
-      # Optional: Deploy only if key is provided
-      - name: Deploy (Optional - Requires id.json)
-        if: ${{ secrets.SOLANA_WALLET }}
-        run: |
-          echo "${{ secrets.SOLANA_WALLET }}" > ~/.config/solana/id.json
-          anchor deploy
+      - name: Anchor Deploy
+        run: anchor deploy
