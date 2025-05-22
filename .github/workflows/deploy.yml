@@ -24,8 +24,8 @@ jobs:
         run: |
           curl -L https://github.com/solana-labs/solana/releases/download/v1.18.12/solana-release-x86_64-unknown-linux-gnu.tar.bz2 -o solana.tar.bz2
           tar -xjf solana.tar.bz2
+          export PATH="$PWD/solana-release/bin:$PATH"
           echo "$PWD/solana-release/bin" >> $GITHUB_PATH
-          echo "$PWD/solana-release/bin" >> $GITHUB_ENV
           solana --version
 
       - name: Decode wallet keypair from secret
