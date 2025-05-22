@@ -22,11 +22,10 @@ jobs:
 
       - name: Install Solana CLI (from GitHub release)
         run: |
-          mkdir -p /tmp/solana
-          curl -L https://github.com/solana-labs/solana/releases/download/v1.18.12/solana-release-x86_64-unknown-linux-gnu.tar.bz2 -o /tmp/solana/solana.tar.bz2
-          tar -xjf /tmp/solana/solana.tar.bz2 -C /tmp/solana
-          echo "/tmp/solana/solana-release/bin" >> $GITHUB_PATH
-          echo "/tmp/solana/solana-release/bin" >> $GITHUB_ENV
+          curl -L https://github.com/solana-labs/solana/releases/download/v1.18.12/solana-release-x86_64-unknown-linux-gnu.tar.bz2 -o solana.tar.bz2
+          tar -xjf solana.tar.bz2
+          echo "$PWD/solana-release/bin" >> $GITHUB_PATH
+          echo "$PWD/solana-release/bin" >> $GITHUB_ENV
           solana --version
 
       - name: Decode wallet keypair from secret
